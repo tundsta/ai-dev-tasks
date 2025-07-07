@@ -7,55 +7,118 @@ alwaysApply: false
 
 ## Goal
 
-To guide an AI assistant in creating a detailed Product Requirements Document (PRD) in Markdown format, based on an initial user prompt. The PRD should be clear, actionable, and suitable for a junior developer to understand and implement the feature.
+To generate a lean, actionable PRD in Markdown that directs the rapid and incremental delivery of a product. This document will be structured around a central problem statement and a series of testable hypotheses. Each feature will be designed as a minimal experiment to validate a specific hypothesis, ensuring that every piece of work contributes to learning and product evolution.
+
+## Core Principles
+
+- **Hypothesis-Driven Development:** Every feature must start with a clear, testable hypothesis about its value to the user.
+- **Minimal Viable Product (MVP) Philosophy:** The focus is on building the smallest possible unit of work to learn and iterate.
+- **Incremental & Modular:** Features are grouped into logical packages and developed as small, independent vertical slices that deliver value and insights quickly.
+- **Event-Driven Thinking:** Key user and system events are modeled upfront to ensure a clear understanding of interactions and state changes from the beginning.
+
+---
 
 ## Process
 
-1.  **Receive Initial Prompt:** The user provides a brief description or request for a new feature or functionality.
-2.  **Ask Clarifying Questions:** Before writing the PRD, the AI *must* ask clarifying questions to gather sufficient detail. The goal is to understand the "what" and "why" of the feature, not necessarily the "how" (which the developer will figure out). Make sure to provide options in letter/number lists so I can respond easily with my selections.
-3.  **Generate PRD:** Based on the initial prompt and the user's answers to the clarifying questions, generate a PRD using the structure outlined below.
-4.  **Save PRD:** Save the generated document as `prd-[feature-name].md` inside the `/tasks` directory.
+1. **Receive Initial Prompt:** The user provides a high-level product idea or a problem to be solved.
+2. **Ask Clarifying Questions (The "5 W's" of a Feature):**
+   - **Who** is the target user?
+   - **What** problem are we solving for them? This will form the core **Problem Statement**.
+   - **Why** do we believe this solution will work? This will be formulated as a **Hypothesis**.
+   - **What** is the smallest possible experiment we can run to test this hypothesis? This defines the **Minimal Feature Slice**.
+   - **What** does success look like? This informs the **Success Metrics** and **Acceptance Criteria**.
+   - **What** key actions will the user or system take? This informs **Event Modeling**.
+3. **Generate the PRD:** The document will be structured according to the template below.
+4. **Save the PRD:** The file should be named `prd-[feature-package-name].md` and stored in the `/tasks/` directory.
 
-## Clarifying Questions (Examples)
-
-The AI should adapt its questions based on the prompt, but here are some common areas to explore:
-
-*   **Problem/Goal:** "What problem does this feature solve for the user?" or "What is the main goal we want to achieve with this feature?"
-*   **Target User:** "Who is the primary user of this feature?"
-*   **Core Functionality:** "Can you describe the key actions a user should be able to perform with this feature?"
-*   **User Stories:** "Could you provide a few user stories? (e.g., As a [type of user], I want to [perform an action] so that [benefit].)"
-*   **Acceptance Criteria:** "How will we know when this feature is successfully implemented? What are the key success criteria?"
-*   **Scope/Boundaries:** "Are there any specific things this feature *should not* do (non-goals)?"
-*   **Data Requirements:** "What kind of data does this feature need to display or manipulate?"
-*   **Design/UI:** "Are there any existing design mockups or UI guidelines to follow?" or "Can you describe the desired look and feel?"
-*   **Edge Cases:** "Are there any potential edge cases or error conditions we should consider?"
+---
 
 ## PRD Structure
 
-The generated PRD should include the following sections:
+### 1. Overview
 
-1.  **Introduction/Overview:** Briefly describe the feature and the problem it solves. State the goal.
-2.  **Goals:** List the specific, measurable objectives for this feature.
-3.  **User Stories:** Detail the user narratives describing feature usage and benefits.
-4.  **Functional Requirements:** List the specific functionalities the feature must have. Use clear, concise language (e.g., "The system must allow users to upload a profile picture."). Number these requirements.
-5.  **Non-Goals (Out of Scope):** Clearly state what this feature will *not* include to manage scope.
-6.  **Design Considerations (Optional):** Link to mockups, describe UI/UX requirements, or mention relevant components/styles if applicable.
-7.  **Technical Considerations (Optional):** Mention any known technical constraints, dependencies, or suggestions (e.g., "Should integrate with the existing Auth module").
-8.  **Success Metrics:** How will the success of this feature be measured? (e.g., "Increase user engagement by 10%", "Reduce support tickets related to X").
-9.  **Open Questions:** List any remaining questions or areas needing further clarification.
+- **Product Vision:** A brief, aspirational statement about the product's ultimate goal.
+- **Problem Statement:** A concise description of the user problem that this PRD addresses.
+
+### 2. Core Hypothesis
+
+A clear, testable statement in the format: "We believe that **[building this feature]** for **[this user]** will result in **[this outcome]**. We will know this is true when we see **[this measurable signal]**."
+
+### 3. Feature Packages & Incremental Slices
+
+This section breaks the product down into logical groups of features. Each package contains one or more slices, which represent the smallest testable units of work.
+
+**Package: [e.g., User Account Management]**
+
+| Feature Slice Name | Hypothesis | Minimal Implementation Scope | Success Metrics & Acceptance Criteria |
+|:---|:---|:---|:---|
+| User Sign-Up with Email | We believe users need a simple way to create an account to save their data. | A user can enter an email and password, which creates a new user record in the database. No email verification for this slice. | **Metric:** 50% of new visitors sign up.<br>**AC:** A `user_created` event is logged. A new record exists in the `users` table. |
+| User Login | We believe users need to access their existing accounts. | A user can enter their email and password to log in. The system validates credentials and creates a session. | **Metric:** 90% of returning users successfully log in.<br>**AC:** A `user_login_success` event is logged. The user is redirected to their dashboard. |
+
+### 4. Event Modeling
+
+A list of critical user and system events to guide the design. This captures the key moments in the user journey.
+
+- `user_signup_initiated`: User clicks the "Sign Up" button.
+- `user_created`: A new user account is successfully saved to the database.
+- `user_login_failed`: A login attempt fails due to incorrect credentials.
+
+### 5. Out of Scope (For Now)
+
+A clear enumeration of what will *not* be built in this iteration to maintain focus. This is crucial for defining the boundaries of the MVP.
+
+### 6. Technical Considerations & ADRs
+
+- High-level thoughts on the technical approach.
+- Links to any relevant Architectural Decision Records (ADRs).
+
+### 7. Open Questions
+
+Any unresolved questions that need to be addressed before or during development.
+
+---
+
+## Architectural Decision Records (ADRs)
+
+To maintain a clear record of key technical decisions, every significant choice must be documented in an ADR.
+
+### ADR Directory & Template
+
+- **Location:** `/adr/`
+- **Naming:** `NNNN-kebab-case-title.md` (e.g., `0001-choosing-a-database.md`)
+- **Template:**
+
+```markdown
+# ADR {NNNN}: {Title}
+
+**Date:** YYYY-MM-DD
+**Status:** Proposed | Accepted | Superseded
+
+## Context
+What is the problem or architectural force we are addressing?
+
+## Decision
+What is the decision we have made?
+
+## Consequences
+What are the positive and negative results of this decision?
+```
+
+### Workflow Integration
+
+1. **During PRD Creation:** Identify any foundational technical questions and create a `Proposed` ADR for each.
+2. **During Implementation:** As a decision is implemented for a feature slice, update the corresponding ADR to `Accepted`.
+3. **In Code:** Reference the ADR number in code comments where the decision is implemented (e.g., `// ADR-0001: Using PostgreSQL for relational data`).
+
+---
 
 ## Target Audience
 
-Assume the primary reader of the PRD is a **junior developer**. Therefore, requirements should be explicit, unambiguous, and avoid jargon where possible. Provide enough detail for them to understand the feature's purpose and core logic.
+A solo developer who requires a clear, focused plan to build, test, and learn rapidly. The structure is designed to connect every line of code back to a testable hypothesis, ensuring that development effort is always aligned with business value and learning goals.
 
-## Output
+## Final Instructions
 
-*   **Format:** Markdown (`.md`)
-*   **Location:** `/tasks/`
-*   **Filename:** `prd-[feature-name].md`
-
-## Final instructions
-
-1. Do NOT start implementing the PRD
-2. Make sure to ask the user clarifying questions
-3. Take the user's answers to the clarifying questions and improve the PRD
+1. **Start with the "Why":** Do not begin writing the PRD until the problem statement and core hypothesis are clearly defined.
+2. **Think in Slices:** Decompose features into the smallest possible increments that can validate a part of the hypothesis.
+3. **Be Explicit About What You're Not Doing:** The "Out of Scope" section is as important as the requirements themselves.
+4. **Document Decisions as You Go:** Create ADRs in real-time to avoid technical debt in documentation.

@@ -1,52 +1,81 @@
 ---
-description: 
-globs: 
+description:
+globs:
 alwaysApply: false
 ---
-# Task List Management
+# Process Guidelines: Hypothesis-Driven Task & Commit Management
 
-Guidelines for managing task lists in markdown files to track progress on completing a PRD
+> **Project:** A Lean, Incrementally Developed Application
+> **Description:** Project-wide rules for managing development tasks and commits in alignment with our hypothesis-driven, feature-slice methodology.
 
-## Task Implementation
-- **One sub-task at a time:** Do **NOT** start the next sub‑task until you ask the user for permission and they say "yes" or "y"
-- **Completion protocol:**  
-  1. When you finish a **sub‑task**, immediately mark it as completed by changing `[ ]` to `[x]`.
-  2. If **all** subtasks underneath a parent task are now `[x]`, follow this sequence:
-    - **First**: Run the full test suite (`pytest`, `npm test`, `bin/rails test`, etc.)
-    - **Only if all tests pass**: Stage changes (`git add .`)
-    - **Clean up**: Remove any temporary files and temporary code before committing
-    - **Commit**: Use a descriptive commit message that:
-      - Uses conventional commit format (`feat:`, `fix:`, `refactor:`, etc.)
-      - Summarizes what was accomplished in the parent task
-      - Lists key changes and additions
-      - References the task number and PRD context
-      - **Formats the message as a single-line command using `-m` flags**, e.g.:
+## 1. Core Principle: Develop by Hypothesis
 
-        ```
-        git commit -m "feat: add payment validation logic" -m "- Validates card type and expiry" -m "- Adds unit tests for edge cases" -m "Related to T123 in PRD"
-        ```
-  3. Once all the subtasks are marked completed and changes have been committed, mark the **parent task** as completed.
-- Stop after each sub‑task and wait for the user's go‑ahead.
+Our development process is driven by validating hypotheses, not just completing tasks. The PRD structures work into Feature Packages, and each package contains one or more Feature Slices. Each slice is a minimal experiment designed to test a specific hypothesis.
 
-## Task List Maintenance
+Your primary goal is to implement one Feature Slice at a time. Every task, commit, and test should directly contribute to validating the hypothesis associated with that slice.
 
-1. **Update the task list as you work:**
-   - Mark tasks and subtasks as completed (`[x]`) per the protocol above.
-   - Add new tasks as they emerge.
+## 2. Task Implementation Workflow
 
-2. **Maintain the "Relevant Files" section:**
-   - List every file created or modified.
-   - Give each file a one‑line description of its purpose.
+Follow this protocol to ensure a structured and focused development cycle centered on learning and validation.
 
-## AI Instructions
+- **One Feature Slice at a Time:** Focus exclusively on the tasks required to complete a single Feature Slice from the PRD. Do not move to the next slice until the current one is fully implemented, committed, and its hypothesis is ready for testing.
+- **Stop and Wait for Confirmation:** After completing the work for a feature slice and making the final commit, pause and wait for explicit user permission ("yes" or "y") before proceeding to the next one.
 
-When working with task lists, the AI must:
+## 3. Completion Protocol & Commit Standards
 
-1. Regularly update the task list file after finishing any significant work.
-2. Follow the completion protocol:
-   - Mark each finished **sub‑task** `[x]`.
-   - Mark the **parent task** `[x]` once **all** its subtasks are `[x]`.
-3. Add newly discovered tasks.
-4. Keep "Relevant Files" accurate and up to date.
-5. Before starting work, check which sub‑task is next.
-6. After implementing a sub‑task, update the file and then pause for user approval.
+When all tasks for a single Feature Slice are complete, follow this sequence precisely.
+
+1. **Mark Tasks Done:** As you finish each constituent task for the slice, immediately mark it as complete (`[ ]` → `[x]`).
+2. **Finalize the Feature Slice:** Once all its tasks are marked `[x]`:
+   - **Run All Relevant Tests:** Execute the test suite for the feature package.
+   - **Stage Changes:** Only if all tests pass, stage the modified files (`git add .`).
+   - **Create the Commit:** Construct a descriptive, hypothesis-driven commit message.
+3. **Mark Feature Slice Done:** After the commit is successfully created, mark the parent feature slice task as `[x]`.
+
+### Commit Message Structure
+
+A high-quality commit message is essential for tracking our learning. It must tell the story of the experiment.
+
+- **Title (`-m "..."`):**
+  - Use a conventional commit prefix (`feat:`, `fix:`, `refactor:`).
+  - Include the Feature Package as the scope (e.g., `feat(UserAccounts):`).
+  - Write a concise summary of what was built.
+- **Body (subsequent `-m "..."` flags):**
+  - **Hypothesis:** State the hypothesis this feature slice was designed to validate.
+  - **Solution & Intent:** Describe the implementation and, most importantly, why it serves as a valid test for the hypothesis.
+  - **Details:** Use bullet points (`-`) to list key changes, additions, or removals.
+  - **Reference:** Link to the relevant PRD (e.g., `Validates H1 in prd-user-account-management.md`).
+
+### Commit Command Example
+
+```bash
+git commit \
+  -m "feat(UserAccounts): Implement user sign-up with email" \
+  -m "Hypothesis: Users need a simple way to create an account to save their data." \
+  -m "This implements the minimal sign-up form and API endpoint. It serves as our initial test to see if visitors will create an account, which is the first step in validating our core assumption about data persistence." \
+  -m "- Created Sign-Up form component" \
+  -m "- Added /api/signup endpoint" \
+  -m "- Wrote unit tests for form validation" \
+  -m "Validates H1 in prd-user-account-management.md"
+```
+
+## 4. AI Instructions & Task List Maintenance
+
+When managing task lists, you must adhere to the following directives:
+
+1. **Check First:** Before starting work, always identify the next pending Feature Slice from the task list.
+2. **Update Immediately:** After completing a task, update the markdown file to reflect its completion (`[x]`).
+3. **Follow Protocol:** Adhere strictly to the Completion Protocol for each feature slice.
+4. **Keep Accurate Records:**
+   - Add new implementation tasks as they are discovered within the scope of the current feature slice.
+   - Diligently maintain a "Relevant Files" section, listing every file created or modified with a brief note on its purpose.
+5. **Pause for Approval:** After committing a feature slice and updating the task list, stop and wait for user confirmation to proceed to the next slice.
+
+## 5. Example Task Template
+
+```markdown
+- [ ] **Feature Slice: User Sign-Up with Email**
+  - [ ] **Task:** Create the user interface for the sign-up form in `/app/UserAccounts/ui/SignUpForm.tsx`.
+  - [ ] **Task:** Implement the back-end endpoint for account creation at `/app/UserAccounts/application/createUser.ts`.
+  - [ ] **Task:** Add unit tests for the sign-up functionality in `/app/UserAccounts/tests/signUp.test.ts`.
+```
